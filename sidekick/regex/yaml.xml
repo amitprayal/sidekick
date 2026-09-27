@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE PARSER SYSTEM "sidekick.dtd">
+<PARSER>
+    <!-- Define the target language file mode matching jEdit's system syntax -->
+    <MODE NAME="yaml"/>
+    <!-- Identify structural block triggers (0, 2, or 4 leading space boundaries) -->
+    <CONSTRUCT TYPE="object" MATCH="^([A-Za-z0-9_-]+):" INDEX="1"/>
+    <CONSTRUCT TYPE="object" MATCH="^  ([A-Za-z0-9_-]+):" INDEX="1"/>
+    <CONSTRUCT TYPE="field" MATCH="^    ([A-Za-z0-9_-]+):" INDEX="1"/>
+    <CONSTRUCT TYPE="field" MATCH="^      ([A-Za-z0-9_-]+):" INDEX="1"/>
+</PARSER>

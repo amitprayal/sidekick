@@ -1,0 +1,88 @@
+<project name="SideKick" default="dist" basedir=".">
+<!--
+     This is a build.xml file for building the SideKick plugin.
+-->
+    <!--<property file="build.properties"/>-->
+    <property file="../build.properties"/>
+
+    <!-- Read optional properties from various places -->
+    <!-- Latter ones override previous properties. -->
+    <property name="javadoc.packagenames"	value="sidekick.*" />
+    <property name="user-doc.xml" location = "users-guide.xml"/>
+    <property name="plugin.dependencies" 	value="ErrorList" />
+    <property name="dist.target" 			value="dist.complete" />
+    <property name="compiler.source" value="1.8" />
+    <property name="compiler.target" value="1.8" />
+    <property name="build.support" value="../build-support" />
+    <property name="jedit.plugins.dir" value="${install.dir}" />
+    <property name="jar.name" value="SideKick.jar" />
+
+    <!--<import file="${build.support}/plugin-build.xml" />-->
+
+    <!-- must define project.class.path AFTER the import for plugin-build.xml.
+    Don't know why, other than plugin-build.xml will not find the jars listed
+    here if the import is listed later.  Ant bug, maybe? -->
+    <path id="project.class.path">
+        <pathelement location="${jedit.install.dir}/jedit.jar" />
+        <pathelement location="${jedit.plugins.dir}/ErrorList.jar"/>
+        <pathelement location="${jedit.plugins.dir}/MarkerSets.jar"/>
+    </path>
+
+    <selector id="packageFiles">
+	  <or>
+		<filename name="macros/*.*" />
+		<filename name="CHANGES.txt" />
+	  </or>
+    </selector>
+    
+	<target name="info" >
+		   <echo message="${jedit.install.dir}"></echo>
+		   <echo message="${jedit.plugins.dir}"></echo>
+	</target>
+	
+	<target name="compile" >
+	   <echo message="${jedit.install.dir}"></echo>
+	   <echo message="${jedit.plugins.dir}"></echo>
+		<javac
+		        debug="on"
+				srcdir="."
+				deprecation="on"
+				includeantruntime="no"
+				includejavaruntime="yes">
+			<classpath refid="project.class.path"/>
+		</javac>
+	</target>
+	
+	
+	<target name="dist" depends="compile">
+		<mkdir dir="${install.dir}"/>
+		<jar jarfile="${install.dir}/${jar.name}">
+			<fileset dir=".">
+				<include name="**/*.bsh"/>
+				<include name="**/*.class"/>
+				<include name="**/*.props"/>
+				<include name="**/*.html"/>
+				<include name="**/*.gif"/>
+				<include name="**/*.png"/>
+				<include name="**/*.scm"/>
+				<include name="actions.xml"/>
+				<include name="services.xml"/>
+				<include name="dockables.xml"/>
+			</fileset>
+		</jar>
+	</target>
+        <target name="clean" description="Remove old compiled classes and build artifacts">
+    <!-- Delete the temporary classes directory -->
+   <delete>
+        <!-- Recursively search all nested subfolders from the current directory -->
+        <fileset dir="." includes="**/*.class"/>
+        
+        <!-- Also target any old compiled JAR files in this directory -->
+        <fileset dir="." includes="*.jar"/>
+    </delete> 
+    <!-- Delete any generated JAR files in the current folder or dist folder -->
+    <delete file="SideKick.jar"/>
+    <delete file="dist/SideKick.jar"/>
+</target>
+
+</project>
